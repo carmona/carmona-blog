@@ -1,0 +1,547 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import type { ResumeData, SupportedLang } from '../data/resume';
+import { resumeTranslations } from '../data/resume';
+
+interface Props {
+	data: ResumeData;
+}
+
+const { data } = Astro.props;
+const currentLang = data.lang;
+const supportedLangs: SupportedLang[] = ['en', 'pt'];
+---
+
+<!doctype html>
+<html lang={currentLang}>
+	<head>
+		<BaseHead title={data.pageTitle} description={data.pageDescription} />
+		<link rel="alternate" hreflang="en" href="/resume" />
+		<link rel="alternate" hreflang="pt" href="/resume/pt" />
+		<link rel="alternate" hreflang="x-default" href="/resume" />
+	</head>
+	<body>
+		<Header />
+		<main id="main-content">
+			<!-- Language Switcher & Page Controls -->
+			<div class="resume-controls">
+				<nav aria-label={data.ui.languageNavLabel} class="lang-nav">
+					<span class="lang-label" aria-hidden="true">🌐</span>
+					<span class="sr-only">{data.ui.languageNavLabel}:</span>
+					<ul class="lang-list">
+						{
+							supportedLangs.map((l) => {
+								const href = l === 'en' ? '/resume' : `/resume/${l}`;
+								const isActive = currentLang === l;
+								return (
+									<li>
+										<a
+											href={href}
+											lang={l}
+											hreflang={l}
+											aria-current={isActive ? 'page' : undefined}
+											class:list={['lang-link', { active: isActive }]}
+										>
+											{data.ui.languages[l]}
+										</a>
+									</li>
+								);
+							})
+						}
+					</ul>
+				</nav>
+				<div class="action-controls">
+					<button type="button" class="control-btn" onclick="window.print()">
+						<span aria-hidden="true">🖨️</span>
+						<span>{data.ui.printButton}</span>
+					</button>
+				</div>
+			</div>
+
+			<!-- Resume Header & Contact -->
+			<header class="resume-header">
+				<h1>{data.name}</h1>
+				<p class="role-title">{data.roleTitle}</p>
+				<address class="contact-info">
+					<span class="contact-item">{data.location}</span>
+					<span class="separator" aria-hidden="true">•</span>
+					<span class="protected-contact-slot">
+						<button
+							type="button"
+							id="reveal-contact-btn"
+							class="reveal-contact-btn"
+							aria-expanded="false"
+							aria-controls="revealed-contact"
+						>
+							<span aria-hidden="true">🔒</span>
+							<span>{data.ui.revealContact}</span>
+						</button>
+						<span id="revealed-contact" class="revealed-contact" hidden></span>
+					</span>
+					<span class="separator" aria-hidden="true">•</span>
+					<span class="contact-item">
+						<a href={data.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn</a>
+					</span>
+					<span class="separator" aria-hidden="true">•</span>
+					<span class="contact-item">
+						<a href={data.github} target="_blank" rel="noopener noreferrer">GitHub</a>
+					</span>
+					<span class="separator" aria-hidden="true">•</span>
+					<span class="contact-item">
+						<a href={data.roadmap} target="_blank" rel="noopener noreferrer">Roadmap</a>
+					</span>
+				</address>
+			</header>
+
+			<hr />
+
+			<!-- Professional Summary -->
+			<section class="resume-section" aria-labelledby="section-summary">
+				<h2 id="section-summary">{data.sections.summary}</h2>
+				<p>{data.summaryText}</p>
+			</section>
+
+			<hr />
+
+			<!-- Target Roles -->
+			<section class="resume-section" aria-labelledby="section-target-roles">
+				<h2 id="section-target-roles">{data.sections.targetRoles}</h2>
+				{
+					data.targetRoles.map((role) => (
+						<article class="role-card">
+							<h3>{role.title}</h3>
+							<p>{role.description}</p>
+						</article>
+					))
+				}
+			</section>
+
+			<hr />
+
+			<!-- Technical Skills Matrix -->
+			<section class="resume-section" aria-labelledby="section-skills">
+				<h2 id="section-skills">{data.sections.skills}</h2>
+				<ul class="skills-list">
+					{
+						data.skills.map((skill) => (
+							<li>
+								<strong>{skill.category}:</strong> {skill.items}
+							</li>
+						))
+					}
+				</ul>
+			</section>
+
+			<hr />
+
+			<!-- Professional Experience -->
+			<section class="resume-section" aria-labelledby="section-experience">
+				<h2 id="section-experience">{data.sections.experience}</h2>
+				{
+					data.experience.map((job) => (
+						<article class="experience-entry">
+							<header class="entry-header">
+								<h3>
+									{job.company} — <span class="role-name">{job.role}</span>
+								</h3>
+								<p class="entry-meta">
+									<time>{job.period}</time> &bull; <span>{job.location}</span>
+								</p>
+							</header>
+							<ul class="entry-bullets">
+								{job.bullets.map((bullet) => (
+									<li>{bullet}</li>
+								))}
+							</ul>
+						</article>
+					))
+				}
+			</section>
+
+			<hr />
+
+			<!-- Education -->
+			<section class="resume-section" aria-labelledby="section-education">
+				<h2 id="section-education">{data.sections.education}</h2>
+				{
+					data.education.map((edu) => (
+						<article class="education-entry">
+							<header class="entry-header">
+								<h3>
+									{edu.institution} — <span>{edu.degree}</span>
+								</h3>
+								<p class="entry-meta">
+									<time>{edu.period}</time>
+								</p>
+							</header>
+							<p>{edu.focus}</p>
+						</article>
+					))
+				}
+			</section>
+
+			<hr />
+
+			<!-- Languages -->
+			<section class="resume-section" aria-labelledby="section-languages">
+				<h2 id="section-languages">{data.sections.languages}</h2>
+				<ul class="languages-list">
+					{
+						data.languages.map((lang) => (
+							<li>
+								<strong>{lang.language}:</strong> {lang.level}
+								{lang.note && <span class="lang-note"> ({lang.note})</span>}
+							</li>
+						))
+					}
+				</ul>
+			</section>
+		</main>
+		<Footer />
+	</body>
+</html>
+
+<style>
+	/* Standard Astro Layout & Resume Enhancements */
+	.resume-controls {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1em;
+		padding: 0.75em 1em;
+		margin-bottom: 2em;
+		background: rgba(var(--gray-light), 30%);
+		border: 1px solid rgba(var(--gray), 20%);
+		border-radius: 8px;
+	}
+
+	.lang-nav {
+		display: flex;
+		align-items: center;
+		gap: 0.5em;
+	}
+
+	.lang-list {
+		display: flex;
+		align-items: center;
+		gap: 0.5em;
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	.lang-link {
+		display: inline-block;
+		min-height: 24px;
+		min-width: 24px;
+		padding: 0.25em 0.75em;
+		color: var(--accent);
+		text-decoration: none;
+		border-radius: 4px;
+		border: 1px solid transparent;
+		font-size: 0.9em;
+		font-weight: 500;
+	}
+
+	.lang-link:hover {
+		background-color: rgba(var(--gray-light), 60%);
+	}
+
+	.lang-link.active {
+		background-color: var(--accent);
+		color: #fff;
+		border-color: var(--accent-dark);
+		font-weight: 700;
+	}
+
+	.control-btn {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.4em;
+		min-height: 24px;
+		padding: 0.4em 0.85em;
+		font-size: 0.9em;
+		font-family: inherit;
+		color: rgb(var(--gray-dark));
+		background: #fff;
+		border: 1px solid rgba(var(--gray), 30%);
+		border-radius: 4px;
+		cursor: pointer;
+		box-shadow: 0 1px 3px rgba(var(--black), 5%);
+		transition: background-color 0.15s ease, border-color 0.15s ease;
+	}
+
+	.control-btn:hover {
+		background-color: rgb(var(--gray-light));
+		border-color: rgba(var(--gray), 60%);
+	}
+
+	.control-btn:focus-visible,
+	.lang-link:focus-visible {
+		outline: 2px solid var(--accent);
+		outline-offset: 2px;
+	}
+
+	/* Resume Header */
+	.resume-header {
+		text-align: left;
+		margin-bottom: 2em;
+	}
+
+	.resume-header h1 {
+		margin: 0 0 0.2em 0;
+		font-size: 2.4em;
+	}
+
+	.role-title {
+		font-size: 1.15em;
+		font-weight: 700;
+		color: var(--accent);
+		margin: 0 0 0.75em 0;
+	}
+
+	.contact-info {
+		font-style: normal;
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 0.5em 0.75em;
+		font-size: 0.9em;
+		color: rgb(var(--gray));
+		margin: 0;
+	}
+
+	.contact-info a {
+		color: inherit;
+		text-decoration: underline;
+		text-underline-offset: 2px;
+	}
+
+	.contact-info a:hover {
+		color: var(--accent);
+	}
+
+	.protected-contact-slot {
+		display: inline-flex;
+		align-items: center;
+	}
+
+	.reveal-contact-btn {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.35em;
+		min-height: 26px;
+		padding: 0.2em 0.7em;
+		font-size: 0.9em;
+		font-family: inherit;
+		color: var(--accent);
+		background: rgba(var(--gray-light), 40%);
+		border: 1px dashed var(--accent);
+		border-radius: 4px;
+		cursor: pointer;
+		transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+	}
+
+	.reveal-contact-btn:hover {
+		background: rgba(var(--gray-light), 80%);
+		border-style: solid;
+	}
+
+	.reveal-contact-btn:focus-visible {
+		outline: 2px solid var(--accent);
+		outline-offset: 2px;
+	}
+
+	.revealed-contact {
+		display: inline-flex;
+		align-items: center;
+		gap: inherit;
+		animation: contactFadeIn 0.2s ease-in-out;
+	}
+
+	@keyframes contactFadeIn {
+		from {
+			opacity: 0;
+			transform: translateY(-2px);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+
+	.separator {
+		color: rgba(var(--gray), 50%);
+	}
+
+	/* Resume Sections */
+	.resume-section {
+		margin: 2em 0;
+	}
+
+	.resume-section h2 {
+		font-size: 1.6em;
+		margin-bottom: 0.75em;
+		color: rgb(var(--black));
+		border-bottom: 2px solid rgba(var(--gray-light), 80%);
+		padding-bottom: 0.25em;
+	}
+
+	.role-card,
+	.experience-entry,
+	.education-entry {
+		margin-bottom: 1.75em;
+	}
+
+	.role-card h3,
+	.experience-entry h3,
+	.education-entry h3 {
+		font-size: 1.15em;
+		margin: 0 0 0.25em 0;
+		color: rgb(var(--black));
+	}
+
+	.role-name {
+		font-weight: 400;
+		color: rgb(var(--gray-dark));
+	}
+
+	.entry-header {
+		margin-bottom: 0.5em;
+	}
+
+	.entry-meta {
+		font-size: 0.9em;
+		color: rgb(var(--gray));
+		margin: 0 0 0.5em 0;
+	}
+
+	.skills-list,
+	.languages-list,
+	.entry-bullets {
+		padding-left: 1.25em;
+		margin: 0.5em 0;
+	}
+
+	.skills-list li,
+	.languages-list li,
+	.entry-bullets li {
+		margin-bottom: 0.5em;
+	}
+
+	.lang-note {
+		color: rgb(var(--gray));
+		font-style: italic;
+	}
+
+	hr {
+		border: 0;
+		border-top: 1px solid rgba(var(--gray-light), 80%);
+		margin: 2em 0;
+	}
+
+	/* Print Styles for PDF / Paper */
+	@media print {
+		:global(header),
+		:global(footer),
+		.resume-controls {
+			display: none !important;
+		}
+
+		main {
+			width: 100% !important;
+			max-width: 100% !important;
+			padding: 0 !important;
+			margin: 0 !important;
+		}
+
+		body {
+			background: #fff !important;
+			color: #000 !important;
+			font-size: 11pt !important;
+			line-height: 1.4 !important;
+		}
+
+		.resume-header h1 {
+			font-size: 18pt !important;
+		}
+
+		.role-title {
+			color: #000 !important;
+			font-size: 12pt !important;
+		}
+
+		.resume-section h2 {
+			font-size: 13pt !important;
+			border-bottom-color: #333 !important;
+			break-after: avoid;
+		}
+
+		.experience-entry,
+		.role-card,
+		.education-entry {
+			break-inside: avoid;
+			margin-bottom: 1em !important;
+		}
+
+		a {
+			color: #000 !important;
+			text-decoration: none !important;
+		}
+
+		.reveal-contact-btn {
+			display: none !important;
+		}
+
+		.revealed-contact {
+			display: inline-flex !important;
+		}
+	}
+</style>
+
+<script>
+	function setupContactProtection() {
+		const btn = document.getElementById('reveal-contact-btn');
+		const slot = document.getElementById('revealed-contact');
+		if (!btn || !slot) return;
+
+		let revealed = false;
+
+		function reveal() {
+			if (revealed) return;
+			revealed = true;
+
+			// Decoupled obfuscation unpacked strictly at runtime upon human interaction
+			// Prevents scrapers from harvesting raw email/phone strings from static HTML or AST extraction
+			const decode = (str: string) => atob(str.split('').reverse().join(''));
+			const email = decode('==QbvNmLr92bsRXdvBUYu9WbyF2YlBXaslmZ');
+			const phoneDisplay = decode('==gN1ADOtAzM2kTOgkyMxgCI1UzK');
+			const telNumber = decode('=YTNwgDMzYTO5MTM1UzK');
+
+			// Build accessible DOM nodes
+			slot.innerHTML = `
+				<span class="contact-item">
+					<a href="mailto:${email}">${email}</a>
+				</span>
+				<span class="separator" aria-hidden="true">•</span>
+				<span class="contact-item">
+					<a href="tel:${telNumber}">${phoneDisplay}</a>
+				</span>
+			`;
+
+			slot.removeAttribute('hidden');
+			btn.setAttribute('aria-expanded', 'true');
+			btn.style.display = 'none';
+		}
+
+		btn.addEventListener('click', reveal);
+		// Auto-reveal for print / PDF generation so resume is fully complete when printed
+		window.addEventListener('beforeprint', reveal);
+	}
+
+	setupContactProtection();
+	document.addEventListener('astro:page-load', setupContactProtection);
+</script>

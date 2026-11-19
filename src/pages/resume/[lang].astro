@@ -1,0 +1,14 @@
+---
+import ResumeView from '../../components/ResumeView.astro';
+import { resumeTranslations, type SupportedLang } from '../../data/resume';
+
+export function getStaticPaths() {
+	return [{ params: { lang: 'en' } }, { params: { lang: 'pt' } }];
+}
+
+const { lang } = Astro.params;
+const currentLang = (lang as SupportedLang) in resumeTranslations ? (lang as SupportedLang) : 'en';
+const data = resumeTranslations[currentLang];
+---
+
+<ResumeView data={data} />
