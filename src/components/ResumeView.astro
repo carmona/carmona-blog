@@ -11,7 +11,6 @@ interface Props {
 
 const { data } = Astro.props;
 const currentLang = data.lang;
-const supportedLangs: SupportedLang[] = ['en', 'pt'];
 ---
 
 <!doctype html>
@@ -23,41 +22,14 @@ const supportedLangs: SupportedLang[] = ['en', 'pt'];
 		<link rel="alternate" hreflang="x-default" href="/resume" />
 	</head>
 	<body>
-		<Header />
+		<Header lang={currentLang} />
 		<main id="main-content">
-			<!-- Language Switcher & Page Controls -->
+			<!-- Page Actions -->
 			<div class="resume-controls">
-				<nav aria-label={data.ui.languageNavLabel} class="lang-nav">
-					<span class="lang-label" aria-hidden="true">🌐</span>
-					<span class="sr-only">{data.ui.languageNavLabel}:</span>
-					<ul class="lang-list">
-						{
-							supportedLangs.map((l) => {
-								const href = l === 'en' ? '/resume' : `/resume/${l}`;
-								const isActive = currentLang === l;
-								return (
-									<li>
-										<a
-											href={href}
-											lang={l}
-											hreflang={l}
-											aria-current={isActive ? 'page' : undefined}
-											class:list={['lang-link', { active: isActive }]}
-										>
-											{data.ui.languages[l]}
-										</a>
-									</li>
-								);
-							})
-						}
-					</ul>
-				</nav>
-				<div class="action-controls">
-					<button type="button" class="control-btn" onclick="window.print()">
-						<span aria-hidden="true">🖨️</span>
-						<span>{data.ui.printButton}</span>
-					</button>
-				</div>
+				<button type="button" class="control-btn" onclick="window.print()">
+					<span aria-hidden="true">🖨️</span>
+					<span>{data.ui.printButton}</span>
+				</button>
 			</div>
 
 			<!-- Resume Header & Contact -->
@@ -199,7 +171,7 @@ const supportedLangs: SupportedLang[] = ['en', 'pt'];
 				</ul>
 			</section>
 		</main>
-		<Footer />
+		<Footer lang={currentLang} />
 	</body>
 </html>
 
@@ -207,54 +179,14 @@ const supportedLangs: SupportedLang[] = ['en', 'pt'];
 	/* Standard Astro Layout & Resume Enhancements */
 	.resume-controls {
 		display: flex;
-		flex-wrap: wrap;
 		align-items: center;
-		justify-content: space-between;
+		justify-content: flex-end;
 		gap: 1em;
-		padding: 0.75em 1em;
+		padding: 0.5em 0.75em;
 		margin-bottom: 2em;
-		background: rgba(var(--gray-light), 30%);
-		border: 1px solid rgba(var(--gray), 20%);
+		background: rgba(var(--gray-light), 20%);
+		border: 1px solid rgba(var(--gray), 15%);
 		border-radius: 8px;
-	}
-
-	.lang-nav {
-		display: flex;
-		align-items: center;
-		gap: 0.5em;
-	}
-
-	.lang-list {
-		display: flex;
-		align-items: center;
-		gap: 0.5em;
-		list-style: none;
-		margin: 0;
-		padding: 0;
-	}
-
-	.lang-link {
-		display: inline-block;
-		min-height: 24px;
-		min-width: 24px;
-		padding: 0.25em 0.75em;
-		color: var(--accent);
-		text-decoration: none;
-		border-radius: 4px;
-		border: 1px solid transparent;
-		font-size: 0.9em;
-		font-weight: 500;
-	}
-
-	.lang-link:hover {
-		background-color: rgba(var(--gray-light), 60%);
-	}
-
-	.lang-link.active {
-		background-color: var(--accent);
-		color: #fff;
-		border-color: var(--accent-dark);
-		font-weight: 700;
 	}
 
 	.control-btn {
@@ -266,21 +198,20 @@ const supportedLangs: SupportedLang[] = ['en', 'pt'];
 		font-size: 0.9em;
 		font-family: inherit;
 		color: rgb(var(--gray-dark));
-		background: #fff;
-		border: 1px solid rgba(var(--gray), 30%);
+		background: var(--bg-surface);
+		border: 1px solid var(--border-color);
 		border-radius: 4px;
 		cursor: pointer;
-		box-shadow: 0 1px 3px rgba(var(--black), 5%);
+		box-shadow: 0 1px 3px rgba(0, 0, 0, 10%);
 		transition: background-color 0.15s ease, border-color 0.15s ease;
 	}
 
 	.control-btn:hover {
-		background-color: rgb(var(--gray-light));
-		border-color: rgba(var(--gray), 60%);
+		background-color: var(--bg-elevated);
+		border-color: var(--accent);
 	}
 
-	.control-btn:focus-visible,
-	.lang-link:focus-visible {
+	.control-btn:focus-visible {
 		outline: 2px solid var(--accent);
 		outline-offset: 2px;
 	}
