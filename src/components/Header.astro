@@ -4,12 +4,13 @@ import { SITE_TITLE } from '../consts';
 ---
 
 <header>
-	<nav>
+	<nav aria-label="Primary">
 		<h2><a href="/">{SITE_TITLE}</a></h2>
 		<div class="internal-links">
 			<HeaderLink href="/">Home</HeaderLink>
-			<HeaderLink href="/blog">Blog</HeaderLink>
+			<!-- <HeaderLink href="/blog">Blog</HeaderLink> -->
 			<HeaderLink href="/about">About</HeaderLink>
+			<HeaderLink href="/resume">Resume</HeaderLink>
 		</div>
 		<div class="social-links">
 			<a href="https://m.webtoo.ls/@astro" target="_blank">
