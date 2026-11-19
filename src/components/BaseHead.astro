@@ -74,19 +74,24 @@ const { title, description, image = '/blog-placeholder-1.jpg' } = Astro.props;
 				sessionStorage.setItem('lang_redirected', 'true');
 
 				var targetPath = '/';
-				if (path === '' || path === '/' || path === '/pt') {
-					targetPath = preferredLang === 'pt' ? '/pt' : '/';
+				if (path === '' || path === '/' || path === '/pt' || path === '/en') {
+					targetPath = preferredLang === 'pt' ? '/pt' : (path === '/en' ? '/en' : '/');
 				} else if (
 					path === '/resume' ||
 					path === '/resume/en' ||
 					path === '/resume/pt' ||
-					path === '/pt/resume'
+					path === '/pt/resume' ||
+					path === '/en/resume'
 				) {
-					targetPath = preferredLang === 'pt' ? '/resume/pt' : '/resume';
-				} else if (path === '/about' || path === '/pt/about') {
-					targetPath = preferredLang === 'pt' ? '/pt/about' : '/about';
+					targetPath = preferredLang === 'pt'
+						? (path === '/en/resume' ? '/pt/resume' : '/resume/pt')
+						: (path === '/pt/resume' ? '/en/resume' : '/resume');
+				} else if (path === '/about' || path === '/pt/about' || path === '/en/about') {
+					targetPath = preferredLang === 'pt'
+						? '/pt/about'
+						: (path === '/pt/about' ? '/en/about' : '/about');
 				} else if (preferredLang === 'pt') {
-					targetPath = '/pt' + path;
+					targetPath = '/pt' + (path.replace(/^\/en/, '') || '');
 				} else {
 					targetPath = path.replace(/^\/pt/, '') || '/';
 				}

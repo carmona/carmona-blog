@@ -332,8 +332,8 @@ export function getLocalizedPath(targetLang: SupportedLang, currentPathname: str
 		: currentPathname;
 
 	// Home
-	if (cleanPath === '' || cleanPath === '/' || cleanPath === '/pt') {
-		return targetLang === 'pt' ? '/pt' : '/';
+	if (cleanPath === '' || cleanPath === '/' || cleanPath === '/pt' || cleanPath === '/en') {
+		return targetLang === 'pt' ? '/pt' : (cleanPath === '' || cleanPath === '/' ? '/' : '/en');
 	}
 
 	// Resume
@@ -341,22 +341,34 @@ export function getLocalizedPath(targetLang: SupportedLang, currentPathname: str
 		cleanPath === '/resume' ||
 		cleanPath === '/resume/en' ||
 		cleanPath === '/resume/pt' ||
-		cleanPath === '/pt/resume'
+		cleanPath === '/pt/resume' ||
+		cleanPath === '/en/resume'
 	) {
-		return targetLang === 'pt' ? '/resume/pt' : '/resume';
+		if (targetLang === 'pt') {
+			return cleanPath === '/en/resume' || cleanPath === '/pt/resume' ? '/pt/resume' : '/resume/pt';
+		} else {
+			return cleanPath === '/pt/resume' || cleanPath === '/en/resume' ? '/en/resume' : '/resume';
+		}
 	}
 
 	// About
-	if (cleanPath === '/about' || cleanPath === '/pt/about') {
-		return targetLang === 'pt' ? '/pt/about' : '/about';
+	if (cleanPath === '/about' || cleanPath === '/pt/about' || cleanPath === '/en/about') {
+		return targetLang === 'pt' ? '/pt/about' : (cleanPath === '/about' ? '/about' : '/en/about');
 	}
 
 	// General
 	const isPt = cleanPath.startsWith('/pt/') || cleanPath === '/pt';
-	const basePath = isPt ? cleanPath.replace(/^\/pt/, '') || '/' : cleanPath;
+	const isEn = cleanPath.startsWith('/en/') || cleanPath === '/en';
+	const basePath = isPt
+		? cleanPath.replace(/^\/pt/, '') || '/'
+		: isEn
+			? cleanPath.replace(/^\/en/, '') || '/'
+			: cleanPath;
 
 	if (targetLang === 'pt') {
 		return basePath === '/' ? '/pt' : `/pt${basePath}`;
 	}
-	return basePath;
+	return isEn || cleanPath.startsWith('/en')
+		? (basePath === '/' ? '/en' : `/en${basePath}`)
+		: basePath;
 }

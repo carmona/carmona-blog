@@ -11,14 +11,18 @@ interface Props {
 
 const { data } = Astro.props;
 const currentLang = data.lang;
+
+const isEnPrefix = Astro.url.pathname === '/en' || Astro.url.pathname.startsWith('/en/');
+const enAlt = isEnPrefix ? '/en/resume' : '/resume';
+const ptAlt = '/resume/pt';
 ---
 
 <!doctype html>
 <html lang={currentLang}>
 	<head>
 		<BaseHead title={data.pageTitle} description={data.pageDescription} />
-		<link rel="alternate" hreflang="en" href="/resume" />
-		<link rel="alternate" hreflang="pt" href="/resume/pt" />
+		<link rel="alternate" hreflang="en" href={enAlt} />
+		<link rel="alternate" hreflang="pt" href={ptAlt} />
 		<link rel="alternate" hreflang="x-default" href="/resume" />
 	</head>
 	<body>

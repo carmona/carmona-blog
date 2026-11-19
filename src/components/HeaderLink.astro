@@ -9,7 +9,7 @@ const cleanHref = typeof href === 'string' ? href.replace(/\/$/, '') || '/' : ''
 
 const isActive =
 	cleanHref === cleanPath ||
-	(cleanHref !== '/' && cleanHref !== '/pt' && cleanPath.startsWith(cleanHref));
+	(cleanHref !== '/' && cleanHref !== '/pt' && cleanHref !== '/en' && cleanPath.startsWith(cleanHref));
 ---
 
 <a

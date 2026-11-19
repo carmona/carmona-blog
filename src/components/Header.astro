@@ -15,9 +15,10 @@ const { lang } = Astro.props;
 const currentLang = lang || getCurrentLang(Astro.url.pathname);
 const t = siteTranslations[currentLang];
 
-const homeUrl = currentLang === 'pt' ? '/pt' : '/';
-const aboutUrl = currentLang === 'pt' ? '/pt/about' : '/about';
-const resumeUrl = currentLang === 'pt' ? '/resume/pt' : '/resume';
+const isEnPrefix = Astro.url.pathname === '/en' || Astro.url.pathname.startsWith('/en/');
+const homeUrl = currentLang === 'pt' ? '/pt' : (isEnPrefix ? '/en' : '/');
+const aboutUrl = currentLang === 'pt' ? '/pt/about' : (isEnPrefix ? '/en/about' : '/about');
+const resumeUrl = currentLang === 'pt' ? '/pt/resume' : (isEnPrefix ? '/en/resume' : '/resume');
 
 const supportedLangs: SupportedLang[] = ['en', 'pt'];
 ---
