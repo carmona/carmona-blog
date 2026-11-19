@@ -1,0 +1,85 @@
+---
+import Layout from '../../layouts/BlogPost.astro';
+import { siteTranslations } from '../../data/siteTranslations';
+
+const { about } = siteTranslations.pt;
+---
+
+<Layout
+	title={about.pageTitle}
+	description={about.pageDescription}
+	pubDate={new Date('November 18 2026')}
+	heroImage="/filipe-carmona.jpg"
+	heroImageAlt={about.heroImageAlt}
+	lang="pt"
+>
+	<p set:html={about.intro} />
+
+	<h2>{about.backgroundHeading}</h2>
+	<p set:html={about.backgroundText} />
+
+	<h2>{about.highlightsHeading}</h2>
+	<ul>
+		{
+			about.highlights.map((h) => (
+				<li>
+					<strong>{h.title}</strong> {h.content}
+				</li>
+			))
+		}
+	</ul>
+
+	<h2>{about.learningHeading}</h2>
+	<p set:html={about.learningText} />
+
+	<h2>{about.languagesHeading}</h2>
+	<p>{about.languagesIntro}</p>
+	<ul>
+		{
+			about.languagesList.map((l) => (
+				<li>
+					<strong>{l.name}:</strong> {l.level}
+				</li>
+			))
+		}
+	</ul>
+
+	<h2>{about.contactHeading}</h2>
+	<p>{about.contactIntro}</p>
+	<ul>
+		<li>
+			📄 Acesse meu <strong><a href="/resume/pt">{about.contactResumeLink}</a></strong> (também disponível em{' '}
+			<strong><a href="/resume" hreflang="en">English</a></strong>).
+		</li>
+		<li>
+			💼 Conecte-se comigo no{' '}
+			<strong>
+				<a href="https://linkedin.com/in/filipecarmona" target="_blank" rel="noopener noreferrer">
+					LinkedIn
+				</a>
+			</strong>
+			.
+		</li>
+		<li>
+			💻 Explore meus projetos e repositórios de código aberto no{' '}
+			<strong>
+				<a href="https://github.com/carmona" target="_blank" rel="noopener noreferrer">
+					GitHub
+				</a>
+			</strong>
+			.
+		</li>
+		<li>
+			🗺️ Acompanhe minha trajetória técnica no{' '}
+			<strong>
+				<a href="https://roadmap.sh/u/carmona" target="_blank" rel="noopener noreferrer">
+					Roadmap.sh
+				</a>
+			</strong>
+			.
+		</li>
+		<li>
+			✉️ Envie uma mensagem por e-mail para <a href={`mailto:${about.contactEmail}`}>{about.contactEmail}</a>.
+		</li>
+	</ul>
+</Layout>

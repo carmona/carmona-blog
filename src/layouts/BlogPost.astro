@@ -4,17 +4,43 @@ import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
+import {
+	getCurrentLang,
+	getLocalizedPath,
+	type SupportedLang,
+} from '../data/siteTranslations';
 
-type Props = CollectionEntry<'blog'>['data'] & {
+type Props = Partial<CollectionEntry<'blog'>['data']> & {
+	title: string;
+	description: string;
 	heroImageAlt?: string;
+	lang?: SupportedLang;
 };
 
-const { title, description, pubDate, updatedDate, heroImage, heroImageAlt = '' } = Astro.props;
+const {
+	title,
+	description,
+	pubDate,
+	updatedDate,
+	heroImage,
+	heroImageAlt = '',
+	lang,
+} = Astro.props;
+
+const currentLang = lang || getCurrentLang(Astro.url.pathname);
+const htmlLang = currentLang === 'pt' ? 'pt-BR' : 'en';
+
+const enAlt = getLocalizedPath('en', Astro.url.pathname);
+const ptAlt = getLocalizedPath('pt', Astro.url.pathname);
 ---
 
-<html lang="en">
+<!doctype html>
+<html lang={htmlLang}>
 	<head>
 		<BaseHead title={title} description={description} />
+		<link rel="alternate" hreflang="en" href={enAlt} />
+		<link rel="alternate" hreflang="pt" href={ptAlt} />
+		<link rel="alternate" hreflang="x-default" href={enAlt} />
 		<style>
 			main {
 				width: calc(100% - 2em);
@@ -57,24 +83,27 @@ const { title, description, pubDate, updatedDate, heroImage, heroImageAlt = '' }
 	</head>
 
 	<body>
-		<Header />
-		<main>
+		<Header lang={currentLang} />
+		<main id="main-content">
 			<article>
 				<div class="hero-image">
 					{heroImage && <img width={1020} height={510} src={heroImage} alt={heroImageAlt} />}
 				</div>
 				<div class="prose">
 					<div class="title">
-						<div class="date">
-							<FormattedDate date={pubDate} />
-							{
-								updatedDate && (
-									<div class="last-updated-on">
-										Last updated on <FormattedDate date={updatedDate} />
-									</div>
-								)
-							}
-						</div>
+						{
+							pubDate && (
+								<div class="date">
+									<FormattedDate date={pubDate} />
+									{updatedDate && (
+										<div class="last-updated-on">
+											{currentLang === 'pt' ? 'Última atualização em ' : 'Last updated on '}
+											<FormattedDate date={updatedDate} />
+										</div>
+									)}
+								</div>
+							)
+						}
 						<h1>{title}</h1>
 						<hr />
 					</div>
@@ -82,6 +111,6 @@ const { title, description, pubDate, updatedDate, heroImage, heroImageAlt = '' }
 				</div>
 			</article>
 		</main>
-		<Footer />
+		<Footer lang={currentLang} />
 	</body>
 </html>

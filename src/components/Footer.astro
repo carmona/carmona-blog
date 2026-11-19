@@ -1,12 +1,26 @@
 ---
+import {
+	siteTranslations,
+	getCurrentLang,
+	type SupportedLang,
+} from '../data/siteTranslations';
+
+interface Props {
+	lang?: SupportedLang;
+}
+
+const { lang } = Astro.props;
+const currentLang = lang || getCurrentLang(Astro.url.pathname);
+const t = siteTranslations[currentLang];
+
 const today = new Date();
 ---
 
 <footer>
-	&copy; {today.getFullYear()} Filipe Carmona. All rights reserved.
+	<p>&copy; {today.getFullYear()} Filipe Carmona. {t.ui.footer.copyright}</p>
 	<div class="social-links">
 		<a href="https://github.com/carmona" target="_blank" rel="noopener noreferrer">
-			<span class="sr-only">Go to Filipe's GitHub profile</span>
+			<span class="sr-only">{t.ui.footer.githubAria}</span>
 			<svg viewBox="0 0 16 16" aria-hidden="true" width="32" height="32"
 				><path
 					fill="currentColor"
@@ -15,7 +29,7 @@ const today = new Date();
 			>
 		</a>
 		<a href="https://linkedin.com/in/filipecarmona" target="_blank" rel="noopener noreferrer">
-			<span class="sr-only">Go to Filipe's LinkedIn profile</span>
+			<span class="sr-only">{t.ui.footer.linkedinAria}</span>
 			<svg viewBox="0 0 24 24" aria-hidden="true" width="32" height="32"
 				><path
 					fill="currentColor"
@@ -31,6 +45,9 @@ const today = new Date();
 		background: linear-gradient(var(--gray-gradient)) no-repeat;
 		color: rgb(var(--gray));
 		text-align: center;
+	}
+	p {
+		margin: 0;
 	}
 	.social-links {
 		display: flex;

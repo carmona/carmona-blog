@@ -1,0 +1,157 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import {
+	siteTranslations,
+	type SupportedLang,
+} from '../data/siteTranslations';
+
+interface Props {
+	lang: SupportedLang;
+}
+
+const { lang } = Astro.props;
+const t = siteTranslations[lang];
+
+const resumeHref = lang === 'pt' ? '/resume/pt' : '/resume';
+const resumeAltHref = lang === 'pt' ? '/resume' : '/resume/pt';
+const aboutHref = lang === 'pt' ? '/pt/about' : '/about';
+---
+
+<!doctype html>
+<html lang={t.htmlLang}>
+	<head>
+		<BaseHead title={t.home.pageTitle} description={t.home.pageDescription} />
+		<link rel="alternate" hreflang="en" href="/" />
+		<link rel="alternate" hreflang="pt" href="/pt" />
+		<link rel="alternate" hreflang="x-default" href="/" />
+	</head>
+	<body>
+		<Header lang={lang} />
+		<main id="main-content">
+			<h1>{t.home.greeting}</h1>
+			<p class="tagline">
+				<strong>{t.home.tagline}</strong>
+			</p>
+			<p>
+				{t.home.intro}
+			</p>
+
+			<hr />
+
+			<section aria-labelledby="highlights-heading">
+				<h2 id="highlights-heading">{t.home.highlightsHeading}</h2>
+				<ul class="highlights-list">
+					{
+						t.home.highlights.map((item) => (
+							<li>
+								<strong>{item.title}</strong> {item.description}
+							</li>
+						))
+					}
+				</ul>
+			</section>
+
+			<hr />
+
+			<section aria-labelledby="quick-links-heading">
+				<h2 id="quick-links-heading">{t.home.exploreHeading}</h2>
+				<p>
+					{t.home.exploreIntro}
+				</p>
+				<ul>
+					<li>
+						📄 {lang === 'pt' ? 'Veja meu' : 'View my complete'}{' '}
+						<strong><a href={resumeHref}>{t.home.resumeLinkText}</a></strong>{' '}
+						{lang === 'pt' ? 'completo' : ''} ({t.home.resumeAltText}{' '}
+						<strong><a href={resumeAltHref} hreflang={lang === 'pt' ? 'en' : 'pt'}>{t.home.resumeAltLinkText}</a></strong>).
+					</li>
+					<li>
+						🧑‍💻 {lang === 'pt' ? 'Saiba mais na página' : 'Read more on the'}{' '}
+						<strong><a href={aboutHref}>{t.home.aboutLinkText}</a></strong>{lang === 'pt' ? '.' : ' page.'}
+					</li>
+					<!-- <li>
+						✍️ Check out articles and updates in the <strong><a href={lang === 'pt' ? '/pt/blog' : '/blog'}>Blog</a></strong>.
+					</li> -->
+					<li>
+						🌐 {
+							lang === 'pt' ? (
+								<>
+									Conecte-se comigo no{' '}
+									<strong>
+										<a
+											href="https://linkedin.com/in/filipecarmona"
+											target="_blank"
+											rel="noopener noreferrer"
+										>
+											LinkedIn
+										</a>
+									</strong>{' '}
+									ou veja meus projetos no{' '}
+									<strong>
+										<a
+											href="https://github.com/carmona"
+											target="_blank"
+											rel="noopener noreferrer"
+										>
+											GitHub
+										</a>
+									</strong>
+									.
+								</>
+							) : (
+								<>
+									Connect with me on{' '}
+									<strong>
+										<a
+											href="https://linkedin.com/in/filipecarmona"
+											target="_blank"
+											rel="noopener noreferrer"
+										>
+											LinkedIn
+										</a>
+									</strong>{' '}
+									or check out my work on{' '}
+									<strong>
+										<a
+											href="https://github.com/carmona"
+											target="_blank"
+											rel="noopener noreferrer"
+										>
+											GitHub
+										</a>
+									</strong>
+									.
+								</>
+							)
+						}
+					</li>
+				</ul>
+			</section>
+		</main>
+		<Footer lang={lang} />
+	</body>
+</html>
+
+<style>
+	.tagline {
+		font-size: 1.15em;
+		color: var(--accent);
+		margin-bottom: 1.25em;
+	}
+
+	.highlights-list {
+		padding-left: 1.25em;
+	}
+
+	.highlights-list li {
+		margin-bottom: 1em;
+	}
+
+	hr {
+		border: 0;
+		border-top: 1px solid rgba(var(--gray), 25%);
+		margin: 2em 0;
+	}
+</style>

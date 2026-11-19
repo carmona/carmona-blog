@@ -10,4 +10,11 @@ export default defineConfig({
 	site: "https://example.com",
 	integrations: [mdx(), sitemap()],
 	adapter: cloudflare(),
+	i18n: {
+		defaultLocale: "en",
+		locales: ["en", "pt"],
+		routing: {
+			prefixDefaultLocale: false,
+		},
+	},
 });
