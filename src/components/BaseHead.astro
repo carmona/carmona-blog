@@ -17,8 +17,103 @@ const { title, description, image = '/blog-placeholder-1.jpg' } = Astro.props;
 <!-- Global Metadata -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="color-scheme" content="light dark" />
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <meta name="generator" content={Astro.generator} />
+
+<!-- Theme Preference Detection & FOUC Prevention -->
+<script is:inline>
+	(function () {
+		try {
+			var theme = localStorage.getItem('theme');
+			if (theme === 'dark' || theme === 'light') {
+				document.documentElement.setAttribute('data-theme', theme);
+				var meta = document.querySelector('meta[name="color-scheme"]');
+				if (meta) meta.content = theme;
+			}
+		} catch (e) {}
+	})();
+</script>
+
+<!-- Language Preference Detection & Auto-Redirect (Instant, Zero-FOUC) -->
+<script is:inline>
+	(function () {
+		try {
+			var explicitPref = localStorage.getItem('user_lang_pref');
+			var sessionRedirected = sessionStorage.getItem('lang_redirected');
+
+			var preferredLang = explicitPref;
+
+			if (!preferredLang) {
+				// Detect from browser settings (navigator.languages priority list)
+				var langs = navigator.languages || [navigator.language || ''];
+				for (var i = 0; i < langs.length; i++) {
+					var code = (langs[i] || '').toLowerCase();
+					if (code.startsWith('pt')) {
+						preferredLang = 'pt';
+						break;
+					}
+					if (code.startsWith('en')) {
+						preferredLang = 'en';
+						break;
+					}
+				}
+			}
+
+			// Default to English if not Portuguese or undetermined
+			if (!preferredLang || (preferredLang !== 'en' && preferredLang !== 'pt')) {
+				preferredLang = 'en';
+			}
+
+			var path = window.location.pathname.replace(/\/$/, '') || '/';
+			var isPtPath = path === '/pt' || path.indexOf('/pt/') === 0 || path === '/resume/pt';
+			var currentLang = isPtPath ? 'pt' : 'en';
+
+			// Redirect on initial load if visited URL language does not match preferred language
+			if (preferredLang !== currentLang && !sessionRedirected) {
+				sessionStorage.setItem('lang_redirected', 'true');
+
+				var targetPath = '/';
+				if (path === '' || path === '/' || path === '/pt') {
+					targetPath = preferredLang === 'pt' ? '/pt' : '/';
+				} else if (
+					path === '/resume' ||
+					path === '/resume/en' ||
+					path === '/resume/pt' ||
+					path === '/pt/resume'
+				) {
+					targetPath = preferredLang === 'pt' ? '/resume/pt' : '/resume';
+				} else if (path === '/about' || path === '/pt/about') {
+					targetPath = preferredLang === 'pt' ? '/pt/about' : '/about';
+				} else if (preferredLang === 'pt') {
+					targetPath = '/pt' + path;
+				} else {
+					targetPath = path.replace(/^\/pt/, '') || '/';
+				}
+
+				if (targetPath !== path && window.location.pathname !== targetPath) {
+					window.location.replace(targetPath + window.location.search + window.location.hash);
+				}
+			}
+
+			// Listen for user clicking any localized alternate link to store explicit preference
+			document.addEventListener('click', function (e) {
+				var link = e.target && e.target.closest ? e.target.closest('a[hreflang]') : null;
+				if (link) {
+					var targetLang = link.getAttribute('hreflang');
+					if (targetLang === 'en' || targetLang === 'pt') {
+						try {
+							localStorage.setItem('user_lang_pref', targetLang);
+							sessionStorage.setItem('lang_redirected', 'true');
+						} catch (err) {}
+					}
+				}
+			});
+		} catch (err) {
+			// Fail silently to normal page flow if localStorage/sessionStorage is blocked
+		}
+	})();
+</script>
 
 <!-- Font preloads -->
 <link rel="preload" href="/fonts/atkinson-regular.woff" as="font" type="font/woff" crossorigin />
