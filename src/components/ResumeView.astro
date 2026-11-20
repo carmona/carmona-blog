@@ -1,9 +1,9 @@
 ---
-import BaseHead from '../components/BaseHead.astro';
-import Header from '../components/Header.astro';
-import Footer from '../components/Footer.astro';
-import type { ResumeData, SupportedLang } from '../data/resume';
-import { resumeTranslations } from '../data/resume';
+import BaseHead from "../components/BaseHead.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import type { ResumeData, SupportedLang } from "../data/resume";
+import { resumeTranslations } from "../data/resume";
 
 interface Props {
 	data: ResumeData;
@@ -12,9 +12,10 @@ interface Props {
 const { data } = Astro.props;
 const currentLang = data.lang;
 
-const isEnPrefix = Astro.url.pathname === '/en' || Astro.url.pathname.startsWith('/en/');
-const enAlt = isEnPrefix ? '/en/resume' : '/resume';
-const ptAlt = '/resume/pt';
+const isEnPrefix =
+	Astro.url.pathname === "/en" || Astro.url.pathname.startsWith("/en/");
+const enAlt = isEnPrefix ? "/en/resume" : "/resume";
+const ptAlt = "/resume/pt";
 ---
 
 <!doctype html>
@@ -30,7 +31,11 @@ const ptAlt = '/resume/pt';
 		<main id="main-content">
 			<!-- Page Actions -->
 			<div class="resume-controls">
-				<button type="button" class="control-btn" onclick="window.print()">
+				<button
+					type="button"
+					class="control-btn"
+					onclick="window.print()"
+				>
 					<span aria-hidden="true">🖨️</span>
 					<span>{data.ui.printButton}</span>
 				</button>
@@ -42,7 +47,45 @@ const ptAlt = '/resume/pt';
 				<p class="role-title">{data.roleTitle}</p>
 				<address class="contact-info">
 					<span class="contact-item">{data.location}</span>
-					<span class="separator" aria-hidden="true">•</span>
+					<span class="separator" aria-hidden="true">
+						•
+					</span>
+					<span class="contact-item">
+						<a
+							href={data.linkedin}
+							target="_blank"
+							rel="noopener noreferrer"
+						>
+							LinkedIn
+						</a>
+					</span>
+					<span class="separator" aria-hidden="true">
+						•
+					</span>
+					<span class="contact-item">
+						<a
+							href={data.github}
+							target="_blank"
+							rel="noopener noreferrer"
+						>
+							GitHub
+						</a>
+					</span>
+					<span class="separator" aria-hidden="true">
+						•
+					</span>
+					<span class="contact-item">
+						<a
+							href={data.roadmap}
+							target="_blank"
+							rel="noopener noreferrer"
+						>
+							Roadmap
+						</a>
+					</span>
+					<span class="separator" aria-hidden="true">
+						•
+					</span>
 					<span class="protected-contact-slot">
 						<button
 							type="button"
@@ -54,19 +97,11 @@ const ptAlt = '/resume/pt';
 							<span aria-hidden="true">🔒</span>
 							<span>{data.ui.revealContact}</span>
 						</button>
-						<span id="revealed-contact" class="revealed-contact" hidden></span>
-					</span>
-					<span class="separator" aria-hidden="true">•</span>
-					<span class="contact-item">
-						<a href={data.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn</a>
-					</span>
-					<span class="separator" aria-hidden="true">•</span>
-					<span class="contact-item">
-						<a href={data.github} target="_blank" rel="noopener noreferrer">GitHub</a>
-					</span>
-					<span class="separator" aria-hidden="true">•</span>
-					<span class="contact-item">
-						<a href={data.roadmap} target="_blank" rel="noopener noreferrer">Roadmap</a>
+						<span
+							id="revealed-contact"
+							class="revealed-contact"
+							hidden
+						></span>
 					</span>
 				</address>
 			</header>
@@ -82,16 +117,17 @@ const ptAlt = '/resume/pt';
 			<hr />
 
 			<!-- Target Roles -->
-			<section class="resume-section" aria-labelledby="section-target-roles">
+			<section
+				class="resume-section"
+				aria-labelledby="section-target-roles"
+			>
 				<h2 id="section-target-roles">{data.sections.targetRoles}</h2>
-				{
-					data.targetRoles.map((role) => (
-						<article class="role-card">
-							<h3>{role.title}</h3>
-							<p>{role.description}</p>
-						</article>
-					))
-				}
+				{data.targetRoles.map((role) => (
+					<article class="role-card">
+						<h3>{role.title}</h3>
+						<p>{role.description}</p>
+					</article>
+				))}
 			</section>
 
 			<hr />
@@ -100,40 +136,41 @@ const ptAlt = '/resume/pt';
 			<section class="resume-section" aria-labelledby="section-skills">
 				<h2 id="section-skills">{data.sections.skills}</h2>
 				<ul class="skills-list">
-					{
-						data.skills.map((skill) => (
-							<li>
-								<strong>{skill.category}:</strong> {skill.items}
-							</li>
-						))
-					}
+					{data.skills.map((skill) => (
+						<li>
+							<strong>{skill.category}:</strong> {skill.items}
+						</li>
+					))}
 				</ul>
 			</section>
 
 			<hr />
 
 			<!-- Professional Experience -->
-			<section class="resume-section" aria-labelledby="section-experience">
+			<section
+				class="resume-section"
+				aria-labelledby="section-experience"
+			>
 				<h2 id="section-experience">{data.sections.experience}</h2>
-				{
-					data.experience.map((job) => (
-						<article class="experience-entry">
-							<header class="entry-header">
-								<h3>
-									{job.company} — <span class="role-name">{job.role}</span>
-								</h3>
-								<p class="entry-meta">
-									<time>{job.period}</time> &bull; <span>{job.location}</span>
-								</p>
-							</header>
-							<ul class="entry-bullets">
-								{job.bullets.map((bullet) => (
-									<li>{bullet}</li>
-								))}
-							</ul>
-						</article>
-					))
-				}
+				{data.experience.map((job) => (
+					<article class="experience-entry">
+						<header class="entry-header">
+							<h3>
+								{job.company} —{" "}
+								<span class="role-name">{job.role}</span>
+							</h3>
+							<p class="entry-meta">
+								<time>{job.period}</time> &bull;{" "}
+								<span>{job.location}</span>
+							</p>
+						</header>
+						<ul class="entry-bullets">
+							{job.bullets.map((bullet) => (
+								<li>{bullet}</li>
+							))}
+						</ul>
+					</article>
+				))}
 			</section>
 
 			<hr />
@@ -141,21 +178,19 @@ const ptAlt = '/resume/pt';
 			<!-- Education -->
 			<section class="resume-section" aria-labelledby="section-education">
 				<h2 id="section-education">{data.sections.education}</h2>
-				{
-					data.education.map((edu) => (
-						<article class="education-entry">
-							<header class="entry-header">
-								<h3>
-									{edu.institution} — <span>{edu.degree}</span>
-								</h3>
-								<p class="entry-meta">
-									<time>{edu.period}</time>
-								</p>
-							</header>
-							<p>{edu.focus}</p>
-						</article>
-					))
-				}
+				{data.education.map((edu) => (
+					<article class="education-entry">
+						<header class="entry-header">
+							<h3>
+								{edu.institution} — <span>{edu.degree}</span>
+							</h3>
+							<p class="entry-meta">
+								<time>{edu.period}</time>
+							</p>
+						</header>
+						<p>{edu.focus}</p>
+					</article>
+				))}
 			</section>
 
 			<hr />
@@ -164,14 +199,14 @@ const ptAlt = '/resume/pt';
 			<section class="resume-section" aria-labelledby="section-languages">
 				<h2 id="section-languages">{data.sections.languages}</h2>
 				<ul class="languages-list">
-					{
-						data.languages.map((lang) => (
-							<li>
-								<strong>{lang.language}:</strong> {lang.level}
-								{lang.note && <span class="lang-note"> ({lang.note})</span>}
-							</li>
-						))
-					}
+					{data.languages.map((lang) => (
+						<li>
+							<strong>{lang.language}:</strong> {lang.level}
+							{lang.note && (
+								<span class="lang-note"> ({lang.note})</span>
+							)}
+						</li>
+					))}
 				</ul>
 			</section>
 		</main>
@@ -207,7 +242,9 @@ const ptAlt = '/resume/pt';
 		border-radius: 4px;
 		cursor: pointer;
 		box-shadow: 0 1px 3px rgba(0, 0, 0, 10%);
-		transition: background-color 0.15s ease, border-color 0.15s ease;
+		transition:
+			background-color 0.15s ease,
+			border-color 0.15s ease;
 	}
 
 	.control-btn:hover {
@@ -249,6 +286,10 @@ const ptAlt = '/resume/pt';
 		margin: 0;
 	}
 
+	.contact-info * {
+		gap: 0.5em 0.75em;
+	}
+
 	.contact-info a {
 		color: inherit;
 		text-decoration: underline;
@@ -277,7 +318,10 @@ const ptAlt = '/resume/pt';
 		border: 1px dashed var(--accent);
 		border-radius: 4px;
 		cursor: pointer;
-		transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+		transition:
+			background-color 0.15s ease,
+			border-color 0.15s ease,
+			color 0.15s ease;
 	}
 
 	.reveal-contact-btn:hover {
@@ -439,8 +483,8 @@ const ptAlt = '/resume/pt';
 
 <script>
 	function setupContactProtection() {
-		const btn = document.getElementById('reveal-contact-btn');
-		const slot = document.getElementById('revealed-contact');
+		const btn = document.getElementById("reveal-contact-btn");
+		const slot = document.getElementById("revealed-contact");
 		if (!btn || !slot) return;
 
 		let revealed = false;
@@ -451,10 +495,11 @@ const ptAlt = '/resume/pt';
 
 			// Decoupled obfuscation unpacked strictly at runtime upon human interaction
 			// Prevents scrapers from harvesting raw email/phone strings from static HTML or AST extraction
-			const decode = (str: string) => atob(str.split('').reverse().join(''));
-			const email = decode('==QbvNmLr92bsRXdvBUYu9WbyF2YlBXaslmZ');
-			const phoneDisplay = decode('==gN1ADOtAzM2kTOgkyMxgCI1UzK');
-			const telNumber = decode('=YTNwgDMzYTO5MTM1UzK');
+			const decode = (str: string) =>
+				atob(str.split("").reverse().join(""));
+			const email = decode("==QbvNmLr92bsRXdvBUYu9WbyF2YlBXaslmZ");
+			const phoneDisplay = decode("==gN1ADOtAzM2kTOgkyMxgCI1UzK");
+			const telNumber = decode("=YTNwgDMzYTO5MTM1UzK");
 
 			// Build accessible DOM nodes
 			slot.innerHTML = `
@@ -467,16 +512,16 @@ const ptAlt = '/resume/pt';
 				</span>
 			`;
 
-			slot.removeAttribute('hidden');
-			btn.setAttribute('aria-expanded', 'true');
-			btn.style.display = 'none';
+			slot.removeAttribute("hidden");
+			btn.setAttribute("aria-expanded", "true");
+			btn.style.display = "none";
 		}
 
-		btn.addEventListener('click', reveal);
+		btn.addEventListener("click", reveal);
 		// Auto-reveal for print / PDF generation so resume is fully complete when printed
-		window.addEventListener('beforeprint', reveal);
+		window.addEventListener("beforeprint", reveal);
 	}
 
 	setupContactProtection();
-	document.addEventListener('astro:page-load', setupContactProtection);
+	document.addEventListener("astro:page-load", setupContactProtection);
 </script>

@@ -154,7 +154,7 @@ export const siteTranslations: Record<SupportedLang, SiteTranslation> = {
 			connectText: 'Connect with me on LinkedIn or check out my work on GitHub.',
 		},
 		about: {
-			pageTitle: `About ${SITE_TITLE}`,
+			pageTitle: `About me`,
 			pageDescription:
 				'Senior Software Engineer, Frontend/Fullstack Specialist & Technical Lead with 10+ years of experience.',
 			heroImageAlt: 'Filipe Carmona',
@@ -271,7 +271,7 @@ export const siteTranslations: Record<SupportedLang, SiteTranslation> = {
 			connectText: 'Conecte-se comigo no LinkedIn ou veja meus projetos no GitHub.',
 		},
 		about: {
-			pageTitle: `Sobre ${SITE_TITLE}`,
+			pageTitle: `Sobre mim`,
 			pageDescription:
 				'Engenheiro de Software Sênior, Especialista Frontend/Fullstack e Líder Técnico com mais de 10 anos de experiência.',
 			heroImageAlt: 'Filipe Carmona',
